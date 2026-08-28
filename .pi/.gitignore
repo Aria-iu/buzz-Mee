@@ -1,0 +1,3 @@
+# Agent 原始日志、临时输出和敏感中间产物仅保留在本地。
+local/*
+!local/.gitkeep
