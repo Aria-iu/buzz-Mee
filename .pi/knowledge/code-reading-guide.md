@@ -48,17 +48,17 @@
 
 ## 第四层：Persistence 与 realtime
 
-1. `crates/buzz-db/src/lib.rs`：store inventory 和 DB runtime boundary；
-2. `buzz-db/src/event.rs`：event query/insert；
-3. `buzz-db/src/channel.rs`：channel/member；
-4. `buzz-db/src/thread.rs` 与 `reaction.rs`：原子派生状态；
-5. `buzz-db/src/community.rs`：tenant lifecycle；
-6. `buzz-db/src/workflow.rs`：workflow persistence；
-7. `crates/buzz-pubsub/src/lib.rs`：Redis routing；
+1. `crates/buzz-db/src/lib.rs`：兼容 facade 与 runtime/store inventory；
+2. `crates/buzz-db/src/runtime/mod.rs`：pool、writer/replica routing、session 与 health boundary；
+3. `crates/buzz-db/src/store/event.rs`：event query/insert；
+4. `crates/buzz-db/src/store/channel.rs` 与 `channel_members.rs`：channel lifecycle/member；
+5. `crates/buzz-db/src/store/thread.rs` 与 `reaction.rs`：原子派生状态；
+6. `crates/buzz-db/src/store/community.rs` 与 `workflow.rs`：tenant/workflow persistence；
+7. `crates/buzz-pubsub/src/lib.rs`、`topic.rs`、`subscriber.rs`：community-scoped Redis routing 与动态精确订阅；
 8. `crates/buzz-search/src/lib.rs`：PostgreSQL FTS；
 9. `crates/buzz-audit/src/lib.rs`：hash-chain audit。
 
-不要先深入 `buzz-db/src/lib.rs` 的 read-replica fence 细节；只有修改 routed reads 时才需要完整掌握。
+不要先深入 `buzz-db/src/runtime/` 的 read-replica fence 细节；只有修改 routed reads 时才需要完整掌握。
 
 ## 第五层：Agent 系统
 
@@ -107,14 +107,14 @@
 | Event 定义 | `buzz-core/src/kind.rs` |
 | Event 写入规则 | `buzz-relay/src/handlers/ingest.rs` |
 | WebSocket live delivery | `event.rs`、`subscription.rs` |
-| 历史查询/search | `req.rs`、`buzz-db/src/event.rs`、`buzz-search` |
-| Channel/member | `buzz-db/src/channel.rs`、relay side effects/commands |
+| 历史查询/search | `req.rs`、`buzz-db/src/store/event.rs`、`buzz-search` |
+| Channel/member | `buzz-db/src/store/channel.rs`、`channel_members.rs`、relay side effects/commands |
 | Agent-facing operation | `buzz-cli` |
 | Agent queue/session | `buzz-acp/src/queue.rs`、`pool.rs` |
 | Workflow | `buzz-workflow` + `buzz-relay/src/workflow_sink.rs` |
 | Desktop UI | `desktop/src/features/<feature>/` |
 | Mobile UI | `mobile/lib/features/<feature>/` |
-| Git hosting | `buzz-relay/src/api/git/`、`buzz-db/src/git_repo.rs` |
+| Git hosting | `buzz-relay/src/api/git/`、`buzz-db/src/store/git_repo.rs` |
 | Media | `buzz-media`、`buzz-relay/src/api/media.rs` |
 
 ## 阅读纪律

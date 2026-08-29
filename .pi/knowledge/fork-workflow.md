@@ -2,22 +2,23 @@
 
 ## Remote 策略
 
-当前唯一 remote：
+当前 remotes：
 
 ```text
-origin = https://github.com/Aria-iu/buzz-Mee.git
+origin   = https://github.com/Aria-iu/buzz-Mee.git
+upstream = https://github.com/block/buzz.git（仅 fetch，push URL 为 DISABLED）
 ```
 
 项目所有者要求：
 
 - 只向 `origin` 推送；
-- 不向原作者仓库推送；
-- 未明确要求时不添加 `upstream`；
-- 未明确要求时不执行 commit 或 push。
+- `upstream` 仅用于获取原作者更新，绝不向其推送；
+- 未明确要求时不执行 commit 或 push；
+- 当项目所有者明确提醒“更新/同步本地项目和 fork”时，该次提醒即授权执行本文件“同步约定”中的 fetch、合并和向 `origin` push。
 
 ## 开发分支策略
 
-当前 checkout 位于 `main`。开始功能开发时，不直接在 `main` 上实现；使用独立分支：
+`main` 保持与 `upstream/main` 一致；个人修改位于 `feature/personal-changes`，后续具体功能也应使用独立分支，不直接在 `main` 上实现：
 
 ```text
 main
@@ -31,7 +32,7 @@ main
 - `docs/<name>`：文档；
 - `experiment/<name>`：明确可丢弃的试验。
 
-Agent 不会自行创建分支；只有在项目所有者批准具体功能开发后执行。
+Agent 不会为未批准的功能自行创建分支；只有在项目所有者批准具体功能开发后执行。
 
 ## Commit 与 Push
 
@@ -41,7 +42,7 @@ Agent 不会自行创建分支；只有在项目所有者批准具体功能开�
 git commit -s
 ```
 
-原因：仓库 DCO gate 要求 `Signed-off-by`。Commit message 遵守 Conventional Commits，例如：
+原因：仓库 DCO gate 要求 `Signed-off-by`。本机已配置 SSH commit signing 与 `commit.gpgsign=true`，因此提交同时具有 GitHub `Verified` 签名。Commit message 遵守 Conventional Commits，例如：
 
 ```text
 feat(cli): add ...
@@ -73,4 +74,16 @@ git push -u origin <branch>
 
 ## 同步原作者更新
 
-当前不配置、不执行。若未来项目所有者明确要求同步，再单独设计只读 upstream fetch 流程；同步动作与个人功能 commit 分开，避免混合历史。
+当项目所有者提醒“更新/同步本地项目和 fork”时，按以下约定执行：
+
+1. 检查当前分支、工作区、remotes 和上下游差异；
+2. 若有未提交修改，先用 `git stash push -u` 安全保存；
+3. `git fetch --no-tags upstream main` 获取原作者更新；
+4. 将本地 `main` 以 `--ff-only` 更新到 `upstream/main`；若不能快进则停止并报告，不覆盖历史；
+5. 将更新后的 `main` push 到 `origin/main`；
+6. 返回提醒前的个人功能分支，将 `main` 合入该分支；需要 merge commit 时添加 sign-off，并由已配置的 SSH key 签名；
+7. 若发生冲突，停止并报告，不猜测解决、不强推；
+8. 无冲突时将个人功能分支 push 到 `origin`；
+9. 恢复 stash，最后核对本地与远端提交、工作区状态。
+
+同步默认使用普通 merge，避免改写已共享功能分支历史；只有项目所有者明确授权时才使用 `rebase` 或 `--force-with-lease`。同步动作与功能实现提交分开，便于审计和回退。

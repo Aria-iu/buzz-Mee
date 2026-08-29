@@ -18,7 +18,7 @@
 | `e` tag | 通常引用 event，例如 thread root/reply 或 reaction target；不能替代 channel `h` scope | `AGENTS.md`、`buzz-core/src/nip10.rs` |
 | Stream | 快速实时聊天 channel；消息可带 thread reply | `VISION.md` |
 | Forum | 异步长讨论 surface；post 与 comment 使用独立 kinds | `VISION.md`、`kind.rs` |
-| DM | 参与者受限的 direct-message channel，最多 9 人 | `VISION.md`、`buzz-db/src/dm.rs` |
+| DM | 参与者受限的 direct-message channel，最多 9 人 | `VISION.md`、`buzz-db/src/store/dm.rs` |
 | ACP | Agent Client Protocol；client/harness 与 Agent 进程之间的 JSON-RPC stdio 协议 | `VISION_AGENT.md`、`buzz-acp` |
 | MCP | Model Context Protocol；Agent 与 shell/file/tool server 之间的协议 | `VISION_AGENT.md`、`buzz-dev-mcp` |
 | `buzz-acp` | 将 relay 事件转成 ACP prompt，并管理 Agent pool、queue、reconnect 的 harness | `crates/buzz-acp/README.md` |

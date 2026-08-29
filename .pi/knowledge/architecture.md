@@ -91,13 +91,13 @@ buzz-dev-mcp 或其他 MCP server
 
 ## 数据与基础设施
 
-- PostgreSQL：events、community、channel/member、workflow、moderation、git metadata、audit 等；search 使用 generated `tsvector` + GIN。
-- Redis：跨 relay node pub/sub、presence、typing、cache-like realtime state。
+- PostgreSQL：events、community、channel/member、workflow、moderation、git metadata、audit 等；search 使用 generated `tsvector` + GIN。`buzz-db/src/lib.rs` 现在是兼容 facade，内部按 `runtime/`（pool、migration、replica routing）与 `store/`（domain SQL）分层。
+- Redis：跨 relay node event fan-out、presence、NIP-98 replay seen-set、rate limit、cache invalidation 和 connection control。事件 topic 使用 `buzz:{community}:channel:{id}` / `buzz:{community}:global`，subscriber 按本地需求动态执行精确 `SUBSCRIBE`；typing 作为 ephemeral event 走相同 fan-out，而不是当前独立 ZSET store。
 - S3/MinIO：media 和相关 object storage。
 - Migrations：`migrations/`，relay 可按配置自动执行；开发流程通常通过 `just setup`/`just migrate`。
 
-证据：`buzz-db/src/lib.rs`、`buzz-pubsub`、`buzz-search`、`buzz-media`、`TESTING.md`。
+证据：`buzz-db/src/{runtime,store}/`、`buzz-pubsub/src/{lib,topic,subscriber}.rs`、`buzz-search`、`buzz-media`、`TESTING.md`。
 
 ## 文档与当前代码差异
 
-`ARCHITECTURE.md` 的部分摘要仍提及旧 `search_index_tx` worker，但当前 `crates/buzz-relay/src/handlers/event.rs` 明确说明 PostgreSQL FTS 已取消独立 indexing worker，searchable row 就是 persisted event row。因此后续判断以当前代码为准，并把 `ARCHITECTURE.md` 作为高价值但可能滞后的说明文档。
+当前复核基线为 `00e61eaf`。根 `ARCHITECTURE.md` 的部分摘要仍提及旧 `search_index_tx` worker、通配 `PSUBSCRIBE` 和旧 Pub/Sub职责；当前代码已使用 PostgreSQL generated FTS、community-scoped动态精确 `SUBSCRIBE`，并在 `buzz-pubsub` 提供 Redis rate limiter。因此后续判断以当前代码为准，并把 `ARCHITECTURE.md` 作为高价值但可能滞后的说明文档。

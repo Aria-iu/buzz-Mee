@@ -52,7 +52,7 @@ just check
 just fix-all
 ```
 
-`fix-all` 会修改文件，只适合开发阶段，不能在当前只读调研阶段运行。
+`fix-all` 会修改文件，只应在明确进入开发或格式修复任务后运行，不能把它当作只读检查。
 
 ### 2. Unit tests
 
@@ -157,7 +157,7 @@ DCO sign-off 是上游 PR 门禁；commit message 使用 Conventional Commits。
 
 ## 当前环境未验证项
 
-本轮只读调研没有验证：
+截至当前知识基线，尚未重新验证：
 
 - Hermit 工具是否已下载；
 - Docker services 是否运行；

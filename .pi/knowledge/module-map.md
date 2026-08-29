@@ -1,6 +1,6 @@
 # Buzz 模块地图
 
-根 `Cargo.toml` 当前包含 29 个 Rust workspace member（含 example），并明确排除 `desktop/src-tauri`。下表以各 crate `Cargo.toml` description、`src/lib.rs` 和项目文档为依据。
+根 `Cargo.toml` 当前包含 31 个 Rust workspace member（30 个 crate + `examples/countdown-bot`），并明确排除 `desktop/src-tauri`。下表以各 crate `Cargo.toml` description、`src/lib.rs` 和项目文档为依据。当前源码基线：`00e61eaf`。
 
 ## Core 与 Relay
 
@@ -8,9 +8,9 @@
 |---|---|
 | `buzz-core` | 无 I/O 核心：kind registry、event wrapper、filter、signature verification、tenant、thread、pairing、engram 等共享类型 |
 | `buzz-relay` | Axum relay server；WebSocket/NIP-01、HTTP bridge、tenant binding、ingest、fan-out、media、git、workflow、huddle、operator/admin 路由 |
-| `buzz-db` | PostgreSQL data access；event、community、channel/member、DM、workflow、moderation、git、push、deletion、replica routing |
-| `buzz-auth` | NIP-42、NIP-98、scope 与 authorization |
-| `buzz-pubsub` | Redis pub/sub、presence、typing 和跨节点 fan-out |
+| `buzz-db` | PostgreSQL data access；crate root 是兼容 facade，内部按 `runtime/`（pool、migration、replica fence）与 `store/`（domain SQL）分层 |
+| `buzz-auth` | NIP-42、NIP-98、NIP-FI federated assertion、scope 与 authorization contracts |
+| `buzz-pubsub` | community-scoped Redis event fan-out、presence、NIP-98 replay guard、rate limiter、cache invalidation 与 connection control；typing 作为 ephemeral event 走 fan-out |
 | `buzz-search` | community-scoped PostgreSQL full-text search |
 | `buzz-audit` | per-community hash-chain audit log |
 | `buzz-deletion` | 整个 community 的 durable deletion engine |

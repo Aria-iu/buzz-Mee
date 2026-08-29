@@ -108,7 +108,7 @@ REQ(filters)
 - Thread 使用 NIP-10 `root`/`reply` marker；relay 校验 parent 与 root 都属于同一 channel，并限制深度。
 - 新 reply 必须同步更新 root materialized counters。
 
-证据：`AGENTS.md`、`buzz-core/src/nip10.rs`、`buzz-relay/src/handlers/ingest.rs`、`buzz-db/src/thread.rs`。
+证据：`AGENTS.md`、`buzz-core/src/nip10.rs`、`buzz-relay/src/handlers/ingest.rs`、`buzz-db/src/store/thread.rs`。
 
 ## 6. Workflow 执行
 

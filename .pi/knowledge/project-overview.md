@@ -59,4 +59,4 @@ Buzz 是一个可自托管的协作工作区：人和 AI Agent 使用同一种 N
 
 ## 当前阶段判断
 
-这不是一个小型示例仓库，而是跨 Rust backend、三类客户端、协议、数据库和部署的成熟 monorepo。个人开发应先选定一个明确 surface，再沿既有 event kind、relay、CLI/client 和测试边界做纵向小切片，避免从全局重构开始。
+这不是一个小型示例仓库，而是跨 Rust backend、三类客户端、协议、数据库和部署的成熟 monorepo。当前知识基线为 `upstream/main` 的 `00e61eaf`；该基线还引入了 `buzz-db` 的 `runtime/` + `store/` 内部分层、NIP-FI认证模块、Relay admin action/outbox能力及Mobile Push扩展。个人开发应先选定一个明确 surface，再沿既有 event kind、relay、CLI/client 和测试边界做纵向小切片，避免从全局重构开始。
