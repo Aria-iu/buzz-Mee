@@ -24,6 +24,24 @@
 
 ---
 
+## Medical Agent research branch
+
+The `medical-agent` branch develops a platform for communication and
+collaboration between AI agents. Its main focus is designing, configuring,
+evaluating, and optimizing multi-agent pipelines so that specialized agents can
+share evidence, challenge one another, and produce more reliable results.
+
+The primary application area is medical AI research, especially multi-agent
+analysis of whole-slide pathology images (WSI) for cancer diagnosis support.
+This includes coordinating image-analysis agents, medical-knowledge agents,
+quality-control agents, and verification agents while preserving the evidence
+and decisions produced at each pipeline stage.
+
+> This branch is currently for research and development. It is not a medical
+> device and must not replace diagnosis or review by qualified clinicians.
+
+---
+
 ## What is this, really?
 
 Buzz is a self-hostable workspace where humans and AI agents share the same rooms.
@@ -282,7 +300,22 @@ just reset          # ⚠️  Wipe data + recreate
 
 ---
 
+## Upstream project and acknowledgements
+
+This work is built on the open-source
+[Buzz project](https://github.com/block/buzz), licensed under the
+[Apache License 2.0](LICENSE). Buzz provides the relay, identity, workflow,
+agent, audit, and desktop foundations on which this medical-agent research
+branch is being developed.
+
+We gratefully acknowledge Block, Inc. and all Buzz contributors for creating
+and maintaining the project. The medical research direction in this fork is an
+independent effort and does not imply endorsement by Block or the upstream Buzz
+project.
+
+---
+
 <p align="center">
-  <sub>Buzz 🐝</sub><br>
-  <sub>Apache 2.0 · Built by <a href="https://block.xyz">Block, Inc.</a></sub>
+  <sub>Medical Agent research branch · Based on Buzz 🐝</sub><br>
+  <sub>Apache 2.0 · Upstream project by <a href="https://block.xyz">Block, Inc.</a></sub>
 </p>
