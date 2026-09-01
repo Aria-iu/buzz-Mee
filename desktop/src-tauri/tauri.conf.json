@@ -5,7 +5,7 @@
   "identifier": "xyz.block.buzz.app",
   "build": {
     "beforeDevCommand": {
-      "script": "node ./node_modules/vite/bin/vite.js",
+      "script": "pnpm exec vite",
       "cwd": "..",
       "wait": false
     },

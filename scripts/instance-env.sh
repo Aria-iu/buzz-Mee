@@ -26,15 +26,15 @@ if [[ "${BUZZ_RESET_WEBVIEW_STATE:-0}" == "1" ]]; then
 fi
 
 # Tauri runs this through `cmd /C` on Windows, which has no `exec` and cannot
-# execute the extensionless `.bin/vite` shim. Vite's Node entry point is
-# portable; `exec` still hands the shell's process slot to Vite elsewhere so
-# Tauri's Ctrl+C reaches it directly.
+# execute the extensionless `.bin/vite` shim. `pnpm exec` resolves the local
+# Vite binary on every platform; elsewhere `exec` still hands the shell's
+# process slot to pnpm so Tauri's Ctrl+C reaches the launched command.
 case "${BUZZ_TEST_PLATFORM:-$(uname -s)}" in
-    MINGW*|MSYS*|CYGWIN*) VITE_LAUNCH="node ./node_modules/vite/bin/vite.js" ;;
-    *) VITE_LAUNCH="exec node ./node_modules/vite/bin/vite.js" ;;
+    MINGW*|MSYS*|CYGWIN*) VITE_LAUNCH="pnpm exec vite" ;;
+    *) VITE_LAUNCH="exec pnpm exec vite" ;;
 esac
 
-BUZZ_TAURI_CONFIG="{\"build\":{\"devUrl\":\"${DEV_URL}\",\"beforeDevCommand\":\"${VITE_LAUNCH} --port ${BUZZ_VITE_PORT} --strictPort\"},\"identifier\":\"xyz.block.buzz.app.dev\",\"productName\":\"Buzz Dev\"}"
+BUZZ_TAURI_CONFIG="{\"build\":{\"devUrl\":\"${DEV_URL}\",\"beforeDevCommand\":{\"script\":\"${VITE_LAUNCH} --port ${BUZZ_VITE_PORT} --strictPort\",\"cwd\":\"..\",\"wait\":false}},\"identifier\":\"xyz.block.buzz.app.dev\",\"productName\":\"Buzz Dev\"}"
 unset VITE_DEV_BRANCH
 
 # In worktrees, extract a label from the branch name and derive a unique app
@@ -95,10 +95,10 @@ if git rev-parse --is-inside-work-tree &>/dev/null; then
         GENERATE_DEV_ICON="$WORKTREE_ROOT/scripts/generate-dev-icon.swift"
         BASE_ICON="$WORKTREE_ROOT/desktop/src-tauri/icons/icon.icns"
 
-        if swift "$GENERATE_DEV_ICON" "$BASE_ICON" "$DEV_ICON" "$BUZZ_WORKTREE_LABEL"; then
+        if [[ "$(uname -s)" == Darwin ]] && command -v swift &>/dev/null && swift "$GENERATE_DEV_ICON" "$BASE_ICON" "$DEV_ICON" "$BUZZ_WORKTREE_LABEL"; then
             echo "🌳 Worktree: ${BUZZ_WORKTREE_LABEL}"
             export VITE_DEV_BRANCH="$BUZZ_WORKTREE_LABEL"
-            BUZZ_TAURI_CONFIG="{\"build\":{\"devUrl\":\"${DEV_URL}\",\"beforeDevCommand\":\"${VITE_LAUNCH} --port ${BUZZ_VITE_PORT} --strictPort\"},\"identifier\":\"xyz.block.buzz.app.dev.${BUZZ_INSTANCE_SLUG}\",\"productName\":\"Buzz Dev (${BUZZ_WORKTREE_LABEL})\",\"bundle\":{\"icon\":[\"$DEV_ICON\"]}}"
+            BUZZ_TAURI_CONFIG="{\"build\":{\"devUrl\":\"${DEV_URL}\",\"beforeDevCommand\":{\"script\":\"${VITE_LAUNCH} --port ${BUZZ_VITE_PORT} --strictPort\",\"cwd\":\"..\",\"wait\":false}},\"identifier\":\"xyz.block.buzz.app.dev.${BUZZ_INSTANCE_SLUG}\",\"productName\":\"Buzz Dev (${BUZZ_WORKTREE_LABEL})\",\"bundle\":{\"icon\":[\"$DEV_ICON\"]}}"
         fi
     fi
 fi
