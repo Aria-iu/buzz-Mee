@@ -2,7 +2,7 @@
 
 ## 当前阶段
 
-**个人开发准备与上游维护**：只读调研已完成；在项目所有者明确批准后可修改产品代码。当前知识基线为 `upstream/main` 的 `00e61eaf`，历史阶段报告保持原样，不追溯改写。
+**Medical Agent个人开发与上游维护**：只读调研已完成，当前已进入个人功能开发阶段。当前知识基线为 `upstream/main` 的 `571c1902`，历史阶段报告保持原样，不追溯改写。
 
 ## 规则与计划
 
@@ -20,6 +20,7 @@
 | [核心工作流](knowledge/core-workflows.md) | 已完成 | 核心事件、权限和 Agent 工作流 |
 | [术语表](knowledge/terminology.md) | 已完成 | Buzz、Nostr、ACP/MCP 术语 |
 | [环境与测试](knowledge/setup-and-testing.md) | 已完成 | 构建、测试和运行风险 |
+| [Desktop just 命令速查](knowledge/desktop-just-commands.md) | 已完成 | 仅前端、Tauri、Relay运行边界及Windows注意事项 |
 | [扩展入口](knowledge/extension-points.md) | 已完成 | 后续个人开发扩展入口 |
 | [代码阅读路线](knowledge/code-reading-guide.md) | 已完成 | 从产品、协议到具体模块的推荐阅读顺序 |
 | [功能 Surface 地图](knowledge/feature-surface-map.md) | 已完成 | 用户功能与 Desktop/Mobile/Relay/CLI 的定位关系 |
